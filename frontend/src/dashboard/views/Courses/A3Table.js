@@ -22,7 +22,12 @@ const A3Table = () => {
     })
   }
     , []);
-    console.log(grades);
+  console.log(course);
+  console.log(grades);
+  const vis = [];
+  const student_gpa = [];
+
+    
 
   const calculateGrade =(grade)=>{
     if(grade>=95)
@@ -46,6 +51,33 @@ const A3Table = () => {
   
     
   } 
+  const gpa_score = (grade) => {
+    if (grade === 'A') return 4;
+    else if (grade === "A-") return 3.66;
+    else if (grade === "B+") return 3.33;
+    else if (grade === "B") return 3;
+    else if (grade === "B-") return 2.66;
+    else if (grade === "C+") return 2.33;
+    else if (grade === "C") return 2;
+    else if (grade === "D+") return 1.66;
+    else return 0;
+  }
+  
+  // el kol fe el kol 
+  grades.map((info) => {
+    vis[info.student_id] = false;
+    student_gpa[info.student_id] = 0;
+    let subjects_count = 0;
+    grades.map((info2) => {
+      if (info.student_id === info2.student_id) {
+        student_gpa[info.student_id] += gpa_score(calculateGrade(info2.full_grade));
+        subjects_count += 1;
+      }
+    })
+    student_gpa[info.student_id] /= subjects_count;
+  })
+  
+
 
   return (
     <div className="a3-table">
@@ -141,7 +173,11 @@ const A3Table = () => {
 
         </thead>
         <tbody className="table-body" >
-        {grades.map((info) => (            
+        {grades.map((info) => { 
+          if (vis[info.student_id]) return null;
+          let gpa = 0, total_subjects = 0;
+          vis[info.student_id] = true;
+          return (            
 
             <tr>
 
@@ -152,7 +188,8 @@ const A3Table = () => {
                 <tr>{info.student_name}</tr>
               </th>
               {grades.map((info2) => {
-                if (info.student_id === info2.student_id)
+                let current_grade = calculateGrade(info2.full_grade);
+                if (info.student_id === info2.student_id) 
                 return (
 
               <th>
@@ -162,7 +199,12 @@ const A3Table = () => {
                   <th className="child">{info2.practical_exams_grade}</th>
                   <th className="child">{info2.written_exams_grade}</th>
                   <th className="child">{info2.full_grade}</th>
-                  <th className="child">{calculateGrade(info2.full_grade)} </th>
+                  <th className="child">{
+                  
+                  current_grade
+                  
+                  
+                  } </th>
                 </tr>
                 
               </th>
@@ -172,12 +214,12 @@ const A3Table = () => {
              
            
               <th >
-                <tr style={{ display: "flex", justifyContent: "center" }}>GPA</tr>
+                <tr style={{ display: "flex", justifyContent: "center" }}> GPA :{student_gpa[info.student_id]}</tr>
 
               </th>
               
             </tr>
-          ))}
+          )})}
 
 
         </tbody>

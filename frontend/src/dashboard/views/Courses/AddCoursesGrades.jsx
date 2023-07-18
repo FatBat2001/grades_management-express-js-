@@ -62,49 +62,52 @@ const AddCoursesGrades = () => {
       <table>
         <thead>
           <tr>
-            <th dir="rtl">اسم الطالب</th>
-            <th dir="rtl">الرقم الوطني للطالب</th>
-            <th dir="rtl">اسم المادة</th>
-            <th dir="rtl">الفصل الدراسي</th>
-            <th dir="rtl"> الاختبار التحريري</th>
-            <th dir="rtl">اعمال السنه</th>
-            <th dir="rtl"> الاختبار العملي</th>
-            <th dir="rtl">الدرجة الكاملة</th>
+<tr></tr>
             <th>الحالة</th>
-
+            <th dir="rtl">الدرجة الكاملة</th>
+            <th dir="rtl"> الاختبار العملي</th>
+            <th dir="rtl">اعمال السنه</th>
+            <th dir="rtl"> الاختبار التحريري</th>
+            <th dir="rtl">الفصل الدراسي</th>
+            <th dir="rtl">اسم المادة</th>
+            <th dir="rtl">الرقم الوطني للطالب</th>
+            <th dir="rtl">اسم الطالب</th>
           </tr>
         </thead>
         <tbody>
-          {course.map((item, i) => (
-            <tr key={i}>
-              <td>{item.student_name}</td>
-              <td>{item.student_national_id}</td>
-              <td>{item.material_name}</td>
-              
-              {item.material_sim === 1 ? (
-      <td>الاول</td>
-    ) : (
-      <td>الثاني</td>
-    )}
           
+          {course.map((item, i) => (
+
+            <tr key={i}>
               <td>
-                <input
-                  type="text"
-                  value={item.written_exams_grade}
-                  onChange={(event) => {
-                    const updatedCourse = [...course];
-                    updatedCourse[i].written_exams_grade = event.target.value;
-                    setCourse(updatedCourse);
-                  }}
-                />
+                <button style={{
+    backgroundColor: 'rgb(172, 134, 1)',
+    color: 'white',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '16px',
+  }} onClick={() => { handleUpdate(i) }}>تعديل</button>
               </td>
               <td>
+                <input type="text" 
+                value={item.status}
+                onChange={(event) => {
+                  const updatedCourse = [...course];
+                  updatedCourse[i].status = event.target.value;
+                  setCourse(updatedCourse);
+                }}
+                />
+                
+                </td>
+                <td>
                 <input
                   type="text"
-                  value={item.year_work}
+                  value={item.full_grade}
                   onChange={(event) => {
                     const updatedCourse = [...course];
-                    updatedCourse[i].year_work = event.target.value;
+                    updatedCourse[i].full_grade = event.target.value;
                     setCourse(updatedCourse);
                   }}
                 />
@@ -123,38 +126,42 @@ const AddCoursesGrades = () => {
               <td>
                 <input
                   type="text"
-                  value={item.full_grade}
+                  value={item.year_work}
                   onChange={(event) => {
                     const updatedCourse = [...course];
-                    updatedCourse[i].full_grade = event.target.value;
+                    updatedCourse[i].year_work = event.target.value;
                     setCourse(updatedCourse);
                   }}
                 />
               </td>
-              <td>
-                <input type="text" 
-                value={item.status}
-                onChange={(event) => {
-                  const updatedCourse = [...course];
-                  updatedCourse[i].status = event.target.value;
-                  setCourse(updatedCourse);
-                }}
-                />
-                  
-                </td>
-
-              <td>
-                <button style={{
-    backgroundColor: 'rgb(172, 134, 1)',
-    color: 'white',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '16px',
-  }} onClick={() => { handleUpdate(i) }}>تعديل</button>
-              </td>
               
+              <td>
+                <input
+                  type="text"
+                  value={item.written_exams_grade}
+                  onChange={(event) => {
+                    const updatedCourse = [...course];
+                    updatedCourse[i].written_exams_grade = event.target.value;
+                    setCourse(updatedCourse);
+                  }}
+                />
+              </td>
+              {item.material_sim === 1 ? (
+      <td>الاول</td>
+    ) : (
+      <td>الثاني</td>
+    )}
+    <td>{item.material_name}</td>
+    <td>{item.student_national_id}</td>
+              <td>{item.student_name}</td>
+          
+              
+              
+      
+          
+              
+
+             
             </tr>
           ))}
         </tbody>

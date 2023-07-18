@@ -167,21 +167,28 @@ const changePage = (id) => {
       <table>
         <thead>
           <tr>
-            <th>اسم الطالب</th>
-            <th>الرقم القومي</th>
-            <th>اسم الماده</th>
             <th>الفصل الدراسي</th>
-            
+            <th>اسم الماده</th>
+
+            <th>الرقم القومي</th>
+
+            <th>اسم الطالب</th>
           </tr>
         </thead>
         <tbody>
         {records.map((item, i) => (
           
   <tr key={i}>
-    <td>{item.student_name}</td>
-    <td>{item.student_national_id}</td>
+   
+   {item.material_sim === 1 ? (
+      <td>الاول</td>
+    ) : (
+      <td>الثاني</td>
+    )}
     <td>{item.material_name}</td>
-    <td>{item.material_sim}</td>
+
+    <td>{item.student_national_id}</td>
+    <td>{item.student_name}</td>
     
 
   </tr>

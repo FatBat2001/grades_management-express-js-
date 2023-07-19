@@ -8,17 +8,23 @@ import csv from "fast-csv";
 import mysql from "mysql";
 import e from "express";
 import bcrypt from "bcrypt";
-
+import student from "../models/student.js";
+import course_grade from "../models/course_grade.js";
 
 const admin = express();
 admin.use(express.Router());
+
+
+
 
 admin.get('/allstudent',
     async (req, res) => {
         try {
             const result = await query('SELECT student.* , material.material_name , material.material_code , material.material_sim , material.material_status , grade.year_work , grade.full_grade , grade.practical_exams_grade	, grade.written_exams_grade FROM students AS student INNER JOIN grade ON student.student_id = grade.student_id INNER JOIN material ON grade.material_id = material.material_id');
-            res.status(200).send(result);
-            console.log(result);
+            const processed_result = handle_grades_query(result);
+            
+            console.log(processed_result[0]);
+            res.status(200).send(processed_result);
 
         } catch (error) {
             console.log(error);
@@ -241,6 +247,43 @@ admin.post('/login',
     }
     
 );
+
+
+
+
+// ------------------------------------------------------- HELPER FUNCTIONS -------------------------------------------------------
+const handle_grades_query = (result) => {
+    const  all_students = [];
+    const myMap = new Map();
+    for (let i = 0; i < result.length; i ++) {
+        const curr = result[i];
+        
+        const temp_course_grade = new course_grade(
+            curr.material_name,
+            curr.material_code,
+            curr.material_sim,
+            curr.material_status,
+            curr.year_work,
+            curr.full_grade,
+            curr.practical_exams_grade,
+            curr.written_exams_grade
+        );
+        if (myMap.has(curr.student_id)) {
+            let pos = myMap.get(curr.student_id);
+            all_students[pos].add_course_grade(temp_course_grade);
+        } else {
+            myMap.set(curr.student_id, all_students.length);
+            let temp_student = new student(
+                curr.student_id,
+                curr.student_name,
+                curr.student_national_id);
+            temp_student.add_course_grade(temp_course_grade);  
+            all_students.push(temp_student);      
+        }
+    }
+    return all_students;
+};
+
 
 
 
